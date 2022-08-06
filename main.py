@@ -1,7 +1,8 @@
 from discord.ext import commands
-from settings import * 
+# from settings import * 
 import discord
 from discord import app_commands
+from decouple import config
 import asyncio
 import os
 import aiohttp
@@ -10,7 +11,7 @@ import aiohttp
 # intents = discord.Intents.default()
 # intents.members = True
 # intents.message_content = True
-# _TOKEN = config('DISCORD_BOT_TOKEN')
+DISCORD_BOT_TOKEN = config('DISCORD_BOT_TOKEN')
 
 # bot = commands.Bot(command_prefix='?', intents=intents)
 MY_GUILD = discord.Object(id=935741302769844244)
@@ -26,7 +27,8 @@ class MyBot(commands.Bot):
 #            'cogs.foo',
 #            'cogs.bar',
 #       ]
-        # self.tree = app_commands.CommandTree(self)
+
+
 
     async def setup_hook(self):
         # self.background_task.start()
@@ -54,7 +56,7 @@ class MyBot(commands.Bot):
     #     print('Running background task...')
 
     async def on_ready(self):
-        print('Ready!')
+        print('Bot is online!')
 
 bot = MyBot()
 # @bot.tree.command()
