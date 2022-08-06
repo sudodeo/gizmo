@@ -5,7 +5,7 @@ class Magiceden:
     def __init__(self) -> None:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-        self.logo = "https://d1fdloi71mui9q.cloudfront.net/Ep8sfIAPQHWYAnJuQkGq_9o2OwssgdTO93vcu"
+        self.logo = "https://magiceden.io/img/favicon/android-chrome-192x192.png"
         self.symbol = "◎"
         self.base = "https://magiceden.io/marketplace/"
 

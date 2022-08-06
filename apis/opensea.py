@@ -12,7 +12,8 @@ class Opensea:
         self.sol_symbol = "◎"
 
     def get_collection_details(self, collection: str):
-        url = f"https://api.opensea.io/api/v1/collection/{collection.strip().lower()}"
+        fmt_collection = collection.strip().lower()
+        url = f"https://api.opensea.io/api/v1/collection/{fmt_collection}"
         res = requests.get(url, headers=self.headers)
         print(res.elapsed.total_seconds())
         if res.status_code == 404:
@@ -44,7 +45,7 @@ class Opensea:
         collection_dictionary = {"name": name,
                                  "opensea_logo": self.logo,
                                  "image": image_url,
-                                 "collection_opensea_url": self.opensea_base + collection.strip().lower(),
+                                 "collection_opensea_url": f"{self.opensea_base}{fmt_collection}",
                                  "collection website": collection_website,
                                  "twitter link": twitter_url,
                                  "discord server": discord_url,
