@@ -3,13 +3,27 @@ from discord import app_commands
 from discord.ext import commands
 from apis.magiceden import Magiceden
 from datetime import datetime
+from typing import List
 
 
 class MagicedenCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    async def collection_autocomplete(
+        self,
+        interaction: discord.Interaction,
+        current: str,
+    ) -> List[app_commands.Choice[str]]:
+
+        fruits = {'fruit1': 'banana', 'adae': 'orange', "kogi": "apple"}
+        return [
+            app_commands.Choice(value=fruits[fruit], name=fruit)
+            for fruit in fruits.keys() if current.lower() in fruit.lower()
+        ][:25]
+
     @app_commands.command()
+    @app_commands.autocomplete(collection=collection_autocomplete)
     async def me(self, interaction: discord.Interaction, collection: str):
         """Get collection details from Magiceden marketplace"""
         magiceden = Magiceden()
@@ -45,16 +59,24 @@ class MagicedenCog(commands.Cog):
             await interaction.response.send_message(embed=embed)
 
         else:
-            
+
             embed = discord.Embed(
                 title="Collection not found", color=discord.Colour.red(), timestamp=time)
             embed.set_thumbnail(url=collection_details[1])
+            embed.add_field(
+                name="Try", value="Checking collection on coralcube")
             embed.set_image(
                 url="https://c.tenor.com/8RRUPtXrEcgAAAAS/osita-osita-iheme.gif")
             embed.set_footer(text="Built by grim.reaper#9626",
                              icon_url=collection_details[1])
 
             await interaction.response.send_message(embed=embed)
+
+    @me.error
+    async def on_me_error(self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
+        owner = self.bot.get_user(741308876204408854)
+        await interaction.response.send_message("An error occured. Contact grim.reaper#9626 with the command", ephemeral=True)
+        await owner.send(f"{error}\n{interaction.data}")
 
 
 async def setup(bot):

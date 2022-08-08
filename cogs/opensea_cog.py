@@ -52,6 +52,12 @@ class OpenseaCog(commands.Cog):
                              icon_url=collection_details[1])
             await interaction.response.send_message(embed=embed)
 
+    @os.error
+    async def on_os_error(self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
+        owner = self.bot.get_user(741308876204408854)
+        await interaction.response.send_message("An error occured. Contact grim.reaper#9626 with the command", ephemeral=True)
+        await owner.send(f"{error}\n{interaction.data}")
+
 
 async def setup(bot):
     await bot.add_cog(OpenseaCog(bot))

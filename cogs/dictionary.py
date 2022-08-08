@@ -15,7 +15,7 @@ class Dictionary(commands.Cog):
         """Search word in dictionary"""
         time = datetime.now()
         definition, part_of_speech = self.dictionary.word_search(word)
-        print(definition)
+        # print(definition)
         if definition:
             embed = discord.Embed(
                 title=f"{word}", description=f"{definition}", color=discord.Colour.green(), timestamp=time)
