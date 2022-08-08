@@ -15,7 +15,7 @@ class Opensea:
         fmt_collection = collection.strip().lower()
         url = f"https://api.opensea.io/api/v1/collection/{fmt_collection}"
         res = requests.get(url, headers=self.headers)
-        print(res.elapsed.total_seconds())
+        # print(res.elapsed.total_seconds())
         if res.status_code == 404:
             return None, self.logo
         res_json = res.json().get("collection")
@@ -55,7 +55,7 @@ class Opensea:
                                            "avg price 24hr": f"{avgPrice24hr:.2f} {self.eth_symbol}",
                                            "unique holders": unique_holders}
                                  }
-        # print(collection_dictionary.values())
+        
         return collection_dictionary
 
     def get_popular_collections(self):

@@ -10,11 +10,11 @@ class Magiceden:
         self.base = "https://magiceden.io/marketplace/"
 
     def get_collection_details(self, collection: str):
-        fmt_collection = collection.strip().replace(" ","_")
+        fmt_collection = collection.strip().lower().replace(" ","_")
         url = f'https://api-mainnet.magiceden.dev/v2/collections/{fmt_collection}'
         # print(url)
         res = requests.get(url, headers=self.headers)
-        print(res.elapsed.total_seconds())
+        # print(res.elapsed.total_seconds())
         res_json = res.json()
         if type(res_json) == str:
             return None, self.logo
@@ -86,3 +86,7 @@ class Magiceden:
 # print(me.get_collection_details("chimpnana"))
 # print(str(timeit.timeit('(me.get_collection_details("chimpnana"))', setup='from __main__ import me')))
 
+
+
+
+# api-devnet.magiceden.dev/v2/collections?offset=0&limit=200

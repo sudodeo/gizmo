@@ -10,12 +10,12 @@ class Coralcube:
         self.base = "https://coralcube.io/collection/"
 
     def get_collection_details(self, collection: str):
-        fmt_collection = collection.strip().replace(" ","_")
+        fmt_collection = collection.strip().lower().replace(" ","_")
         url = f"https://api.coralcube.io/v1/getItems?page_size=1&symbol={fmt_collection}"
 
         res = requests.get(url, headers=self.headers)
 
-        print(res.elapsed.total_seconds())
+        # print(res.elapsed.total_seconds())
         res_json = res.json()
         # print(res_json)
         # A bad request will return {"detail": "Collection not found"}
