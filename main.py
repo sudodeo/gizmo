@@ -19,7 +19,7 @@ class MyBot(commands.Bot):
         intents = discord.Intents.default()
         intents.members = True
         intents.message_content = True
-        super().__init__(command_prefix='>', intents=intents)
+        super().__init__(command_prefix='>', intents=intents, activity=discord.Activity(name=f">help ({len(self.guilds)} servers)", type=3))
         # self.initial_extensions = [
         #     'cogs.',
         #     'cogs.foo',
@@ -50,7 +50,7 @@ class MyBot(commands.Bot):
     #     print('Running background task...')
 
     async def on_ready(self):
-        await self.change_presence(activity=discord.Activity(name=f">help ({len(self.guilds)} servers)", type=3))
+        # await self.change_presence()
         print('Bot is online!')
 
 
