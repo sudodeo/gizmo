@@ -1,5 +1,5 @@
 {
     "env": {
-        "DEBUG": "true"
+        "DEBUG": "false"
     }
 }

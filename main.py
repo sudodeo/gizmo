@@ -27,6 +27,7 @@ class MyBot(commands.Bot):
         # ]
         # self.tree = app_commands.CommandTree(self)
 
+
     async def setup_hook(self):
         # self.background_task.start()
         self.session = aiohttp.ClientSession()
@@ -38,6 +39,7 @@ class MyBot(commands.Bot):
                 await bot.load_extension(f"cogs.{file_name[:-3]}")
         # self.tree.copy_global_to(guild=MY_GUILD)
         # await self.tree.sync(guild=MY_GUILD)
+
 
     async def close(self):
         await super().close()
