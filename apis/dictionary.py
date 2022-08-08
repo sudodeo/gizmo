@@ -14,7 +14,7 @@ class AntiBozo:
         url = f'https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key={self._API_KEY}'
 
         res = requests.get(url, headers=headers)
-        print(res.elapsed.total_seconds())
+        # print(res.elapsed.total_seconds())
         word_of_the_day_dictionary = {}
 
         word = res.json().get('word')
@@ -36,7 +36,7 @@ class AntiBozo:
 
         url = f'https://api.wordnik.com/v4/word.json/{word}/definitions?limit=15&includeRelated=false&useCanonical=false&includeTags=false&api_key={self._API_KEY}'
         res = requests.get(url, headers=headers)
-        print(res.elapsed.total_seconds())
+        # print(res.elapsed.total_seconds())
         definition_list = res.json()
         for dictionary in definition_list[:5]:
             definition = dictionary.get('text')

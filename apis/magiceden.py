@@ -8,6 +8,7 @@ class Magiceden:
         self.logo = "https://magiceden.io/img/favicon/android-chrome-192x192.png"
         self.symbol = "◎"
         self.base = "https://magiceden.io/marketplace/"
+        self.lamport = 1000000000
 
     def get_collection_details(self, collection: str):
         fmt_collection = collection.strip().lower().replace(" ","_")
@@ -28,10 +29,10 @@ class Magiceden:
         twitter_url = res_json.get('twitter')
 
         # Stats
-        floor_price = res_json.get('floorPrice') / 1000000000
+        floor_price = res_json.get('floorPrice') 
         listed_count = res_json.get('listedCount')
-        total_volume = res_json.get('volumeAll') / 1000000000
-        avgPrice24hr = res_json.get('avgPrice24hr') / 1000000000
+        total_volume = res_json.get('volumeAll') 
+        avgPrice24hr = res_json.get('avgPrice24hr') 
 
         # GET TOTAL SUPPLY AND UNIQUE HOLDERS
         # url = f'https://api-mainnet.magiceden.io/rpc/getCollectionHolderStats/{collection.strip().replace(" ","_")}'
@@ -39,7 +40,8 @@ class Magiceden:
         # res_json = res.json().get("results")
         # total_supply = res_json.get('totalSupply')
         # unique_holders = res_json.get('uniqueHolders')
-
+        if None in [floor_price, total_volume, avgPrice24hr]:
+            return None, self.logo
         collection_dictionary = {"name": name,
                                  "image": image_url,
                                  "collection_magiceden_url": f"{self.base}{fmt_collection}",
@@ -47,10 +49,10 @@ class Magiceden:
                                  "collection website": collection_website,
                                  "twitter link": twitter_url,
                                  "discord server": discord_url,
-                                 "stats": {"floor price": f"{floor_price} {self.symbol}",
+                                 "stats": {"floor price": f"{floor_price / self.lamport} {self.symbol}",
                                            "listed count": listed_count,
-                                           "total volume": f"{total_volume:.2f}{self.symbol}",
-                                           "avg price 24hr": f"{avgPrice24hr:.2f}{self.symbol}", }
+                                           "total volume": f"{(total_volume / self.lamport):.2f}{self.symbol}",
+                                           "avg price 24hr": f"{(avgPrice24hr / self.lamport):.2f}{self.symbol}", }
                                 }
         return collection_dictionary
 

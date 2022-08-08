@@ -7,6 +7,7 @@ class Coralcube:
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
         self.logo = "https://coralcube.io/favicon.ico"
         self.symbol = "◎"
+        self.lamport = 1000000000
         self.base = "https://coralcube.io/collection/"
 
     def get_collection_details(self, collection: str):
@@ -34,13 +35,14 @@ class Coralcube:
         twitter_url = collection_data.get('twitter')
 
         # Stats
-        floor_price = collection_data.get('floor_price') / 1000000000
+        floor_price = collection_data.get('floor_price') 
         listed_count = collection_data.get('listed_count')
         total_supply = collection_data.get('total_count')
         unique_holders = collection_data.get('unique_owners')
-        seven_day_volume = collection_data.get('volume') / 1000000000
+        seven_day_volume = collection_data.get('volume') 
         # avgPrice24hr = collection_data.get('avgPrice24hr') / 1000000000
-
+        if None in [floor_price, seven_day_volume]:
+            return None, self.logo
         collection_dictionary = {"name": name,
                                  "image": image_url,
                                  "collection_coralcube_url": f"{self.base}{fmt_collection}",
@@ -49,9 +51,9 @@ class Coralcube:
                                  "twitter link": twitter_url,
                                  "discord server": discord_url,
                                  "stats": {"total supply": total_supply,
-                                           "floor price": f"{floor_price} {self.symbol}",
+                                           "floor price": f"{floor_price / self.lamport} {self.symbol}",
                                            "listed count": listed_count,
-                                           "total volume": f"{seven_day_volume:.2f} {self.symbol}",
+                                           "total volume": f"{(seven_day_volume / self.lamport):.2f} {self.symbol}",
                                         #    "avg price 24hr": f"{avgPrice24hr:.2f} {self.symbol}",
                                            "unique holders": unique_holders}
                                  }
