@@ -48,7 +48,7 @@ class MyBot(commands.Bot):
     #     print('Running background task...')
 
     async def on_ready(self):
-        await self.change_presence(activity=discord.Activity(name=">help", type=3))
+        await self.change_presence(activity=discord.Activity(name=f">help{len(self.fetch_guilds)}", type=3))
         print('Bot is online!')
 
 
