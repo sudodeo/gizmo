@@ -1,4 +1,4 @@
-from discord.ext import commands
+from discord.ext import commands, tasks
 # from settings import *
 import discord
 from discord import app_commands
@@ -19,7 +19,7 @@ class MyBot(commands.Bot):
         intents = discord.Intents.default()
         intents.members = True
         intents.message_content = True
-        super().__init__(command_prefix='>', intents=intents, activity=discord.Activity(name=f">help ({len(self.guilds)} servers)", type=3))
+        super().__init__(command_prefix='>', intents=intents)
         # self.initial_extensions = [
         #     'cogs.',
         #     'cogs.foo',
@@ -30,8 +30,8 @@ class MyBot(commands.Bot):
 
     async def setup_hook(self):
         # self.background_task.start()
+        self.loop.create_task(self.startup())
         self.session = aiohttp.ClientSession()
-        # print(os.listdir())
 
         for file_name in os.listdir("./cogs"):
 
@@ -47,10 +47,14 @@ class MyBot(commands.Bot):
 
     # @tasks.loop(minutes=10)
     # async def background_task(self):
+    #     await self.change_presence(activity=discord.Activity(name=f">help ({len(self.guilds)} servers)", type=3))
     #     print('Running background task...')
 
+    async def startup(self):
+        await self.wait_until_ready()
+        await self.change_presence(activity=discord.Activity(name=f">help on {len(self.guilds)} servers", type=3))
+
     async def on_ready(self):
-        # await self.change_presence()
         print('Bot is online!')
 
 
