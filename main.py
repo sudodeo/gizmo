@@ -1,5 +1,5 @@
 from discord.ext import commands
-# from settings import * 
+# from settings import *
 import discord
 from discord import app_commands
 from decouple import config
@@ -8,20 +8,18 @@ import os
 import aiohttp
 
 
-# intents = discord.Intents.default()
-# intents.members = True
-# intents.message_content = True
 DISCORD_BOT_TOKEN = config('DISCORD_BOT_TOKEN')
 
-# bot = commands.Bot(command_prefix='?', intents=intents)
+
 MY_GUILD = discord.Object(id=935741302769844244)
+
 
 class MyBot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.members = True
         intents.message_content = True
-        super().__init__(command_prefix='?', intents=intents)
+        super().__init__(command_prefix='>', intents=intents)
         # self.initial_extensions = [
         #     'cogs.',
         #     'cogs.foo',
@@ -32,52 +30,28 @@ class MyBot(commands.Bot):
     async def setup_hook(self):
         # self.background_task.start()
         self.session = aiohttp.ClientSession()
-        
-        
+        # print(os.listdir())
+
         for file_name in os.listdir("./cogs"):
+
             if file_name.endswith(".py") and file_name != "__init__.py":
                 await bot.load_extension(f"cogs.{file_name[:-3]}")
         # self.tree.copy_global_to(guild=MY_GUILD)
         # await self.tree.sync(guild=MY_GUILD)
 
-
-    # async def close(self):
-    #     await super().close()
-    #     await self.session.close()
-    
-    # async def load_extensions(self):    
-        # for file_name in os.listdir("./cogs"):
-        #     if file_name.endswith(".py") and file_name != "__init__.py":
-        #         await bot.load_extension(f"cogs.{file_name[:-3]}")
+    async def close(self):
+        await super().close()
+        await self.session.close()
 
     # @tasks.loop(minutes=10)
     # async def background_task(self):
     #     print('Running background task...')
 
     async def on_ready(self):
+        await self.change_presence(activity=discord.Activity(name=">help", type=3))
         print('Bot is online!')
 
+
 bot = MyBot()
-# @bot.tree.command()
-# async def pings(interaction: discord.Interaction):
-#     """Ping bot"""
-#     await interaction.response.send_message(f'Pong!, {interaction.user.mention}')
+
 bot.run(DISCORD_BOT_TOKEN)
-# async def load_extensions():    
-#     for file_name in os.listdir("./cogs"):
-#         if file_name.endswith(".py") and file_name != "__init__.py":
-#             await bot.load_extension(f"cogs.{file_name[:-3]}")
-
-# async def main():
-#     async with bot:
-#         await load_extensions()
-#         await bot.run(DISCORD_BOT_TOKEN)
-
-# asyncio.run(main())
-# async def on_ready():
-    # pass
-    # print('kk')
-    # await print(f"bot.user.id is online")
-
-# bot.add_listener(on_ready)
-
