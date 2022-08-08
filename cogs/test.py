@@ -9,7 +9,7 @@ class Test(commands.Cog):
     @commands.hybrid_command(name="ping")
     async def ping(self, ctx: commands.Context) -> None:
         """ Check if bot is online """
-        await ctx.reply(f"Pong!->\nBot Speed: {self.bot.latency * 1000}ms")
+        await ctx.reply(f"Pong!->\nBot Speed: {(self.bot.latency * 1000):.2f}ms")
     # @commands.command()
     # async def welcome(self, ctx, ):
 
