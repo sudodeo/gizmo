@@ -50,7 +50,7 @@ class CoralcubeCog(commands.Cog):
 
             embed = discord.Embed(
                 title="Collection not found", color=discord.Colour.red(), timestamp=time)
-            embed.set_thumbnail(url=collection_details[1])
+            # embed.set_thumbnail(url=collection_details[1])
             embed.add_field(
                 name="Try", value="Checking collection on magiceden")
             embed.set_image(

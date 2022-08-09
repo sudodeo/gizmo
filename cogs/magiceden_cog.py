@@ -10,20 +10,20 @@ class MagicedenCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # async def collection_autocomplete(
-    #     self,
-    #     interaction: discord.Interaction,
-    #     current: str,
-    # ) -> List[app_commands.Choice[str]]:
+    async def collection_autocomplete(
+        self,
+        interaction: discord.Interaction,
+        current: str,
+    ) -> List[app_commands.Choice[str]]:
 
-    #     fruits = {'fruit1': 'banana', 'adae': 'orange', "kogi": "apple"}
-    #     return [
-    #         app_commands.Choice(value=fruits[fruit], name=fruit)
-    #         for fruit in fruits.keys() if current.lower() in fruit.lower()
-    #     ][:25]
+        fruits = {'DeGods': 'degods', 'Okay Bears': 'okay_bears', "Cets On Creck": "cets_on_creck", "Primates": "primates", "Vandals": "vandal_city", "Blocksmith Labs": "blocksmith_labs"}
+        return [
+            app_commands.Choice(value=fruits[fruit], name=fruit)
+            for fruit in fruits.keys() if current.lower() in fruit.lower()
+        ][:25]
 
     @app_commands.command()
-    # @app_commands.autocomplete(collection=collection_autocomplete)
+    @app_commands.autocomplete(collection=collection_autocomplete)
     async def me(self, interaction: discord.Interaction, collection: str):
         """Get collection details from Magiceden marketplace"""
         magiceden = Magiceden()
@@ -62,7 +62,7 @@ class MagicedenCog(commands.Cog):
 
             embed = discord.Embed(
                 title="Collection not found", color=discord.Colour.red(), timestamp=time)
-            embed.set_thumbnail(url=collection_details[1])
+            # embed.set_thumbnail(url=collection_details[1])
             embed.add_field(
                 name="Try", value="Checking collection on coralcube")
             embed.set_image(

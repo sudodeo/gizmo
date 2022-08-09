@@ -42,7 +42,7 @@ class OpenseaCog(commands.Cog):
         else:
             embed = discord.Embed(
                 title="Collection not found", color=discord.Colour.red(), timestamp=time)
-            embed.set_thumbnail(url=collection_details[1])
+            # embed.set_thumbnail(url=collection_details[1])
             embed.add_field(name="Try", value="Check spelling", inline=False)
             embed.add_field(
                 name="Try", value="compound name collections should look like:\nboredapeyachtclub or mutant-ape-yacht-club", inline=False)
