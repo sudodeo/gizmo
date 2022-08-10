@@ -1,6 +1,7 @@
 from discord.ext import commands, tasks
 # from settings import *
 import discord
+import logging
 from discord import app_commands
 from decouple import config
 import asyncio
@@ -10,7 +11,7 @@ import aiohttp
 
 DISCORD_BOT_TOKEN = config('DISCORD_BOT_TOKEN')
 
-
+handler = logging.FileHandler(filename='gizmo.log', encoding='utf-8', mode='w')
 MY_GUILD = discord.Object(id=935741302769844244)
 
 
@@ -60,4 +61,4 @@ class MyBot(commands.Bot):
 
 bot = MyBot()
 
-bot.run(DISCORD_BOT_TOKEN)
+bot.run(DISCORD_BOT_TOKEN, log_handler=handler, log_level=logging.DEBUG)
