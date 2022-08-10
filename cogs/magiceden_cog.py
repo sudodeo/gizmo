@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import List
 
 
-class MagicedenCog(commands.Cog):
+class MagicedenCog(commands.Cog, name="Magiceden"):
     def __init__(self, bot):
         self.bot = bot
 

@@ -1,3 +1,4 @@
+from unicodedata import name
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -5,7 +6,7 @@ from apis.opensea import Opensea
 from datetime import datetime
 
 
-class OpenseaCog(commands.Cog):
+class OpenseaCog(commands.Cog, name="Opensea"):
     def __init__(self, bot):
         self.bot = bot
 

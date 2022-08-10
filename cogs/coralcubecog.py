@@ -5,7 +5,7 @@ from apis.coralcube import Coralcube
 from datetime import datetime
 
 
-class CoralcubeCog(commands.Cog):
+class CoralcubeCog(commands.Cog, name="Coralcube"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -64,10 +64,8 @@ class CoralcubeCog(commands.Cog):
 
     @cc.error
     async def on_cc_error(self, ctx, error: discord.app_commands.AppCommandError):
-        owner = self.bot.get_user(741308876204408854)
-
-        # , delete_after=5)
-        await ctx.reply("An error occured. Contact grim.reaper#9626 for support")
+        owner = self.bot.get_user(741308876204408854)        
+        await ctx.reply("An error occured. Contact grim.reaper#9626 for support", delete_after=5)
         await owner.send(f"{error}\n{ctx.kwargs}")
 
 
