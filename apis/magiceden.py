@@ -1,5 +1,7 @@
 import requests
 import timeit
+import aiohttp
+
 
 class Magiceden:
     def __init__(self) -> None:
@@ -10,61 +12,67 @@ class Magiceden:
         self.base = "https://magiceden.io/marketplace/"
         self.lamport = 1000000000
 
-    def get_collection_details(self, collection: str):
-        fmt_collection = collection.strip().lower().replace(" ","_")
+    async def get_collection_details(self, collection: str):
+        fmt_collection = collection.strip().lower().replace(" ", "_")
         url = f'https://api-mainnet.magiceden.dev/v2/collections/{fmt_collection}'
         # print(url)
-        res = requests.get(url, headers=self.headers)
-        # print(res.elapsed.total_seconds())
-        res_json = res.json()
-        if type(res_json) == str:
-            return None, self.logo
-        # Basic info
-        name = res_json.get('name')
-        image_url = res_json.get('image')
-        # description = res_json.get('description')
-        discord_url = res_json.get("discord")
-        collection_website = res_json.get('website')
-        # print(collection_website)
-        twitter_url = res_json.get('twitter')
+        session = aiohttp.ClientSession()
+        async with session.get(url, headers=self.headers) as res:
+            # res = requests.get(url, headers=self.headers)
+            # print(res.elapsed.total_seconds())
+            res_json = await res.json()
+            if type(res_json) == str:
+                return None, self.logo
+            # Basic info
+            name = res_json.get('name')
+            image_url = res_json.get('image')
+            # description = res_json.get('description')
+            discord_url = res_json.get("discord")
+            collection_website = res_json.get('website')
+            # print(collection_website)
+            twitter_url = res_json.get('twitter')
 
-        # Stats
-        floor_price = res_json.get('floorPrice') 
-        listed_count = res_json.get('listedCount')
-        total_volume = res_json.get('volumeAll') 
-        avgPrice24hr = res_json.get('avgPrice24hr') 
+            # Stats
+            floor_price = res_json.get('floorPrice')
+            listed_count = res_json.get('listedCount')
+            total_volume = res_json.get('volumeAll')
+            avgPrice24hr = res_json.get('avgPrice24hr')
 
-        # GET TOTAL SUPPLY AND UNIQUE HOLDERS
-        # url = f'https://api-mainnet.magiceden.io/rpc/getCollectionHolderStats/{collection.strip().replace(" ","_")}'
-        # res = requests.get(url, headers=self.headers)
-        # res_json = res.json().get("results")
-        # total_supply = res_json.get('totalSupply')
-        # unique_holders = res_json.get('uniqueHolders')
-        if None in [floor_price, total_volume, avgPrice24hr]:
-            return None, self.logo
-        collection_dictionary = {"name": name,
-                                 "image": image_url,
-                                 "collection_magiceden_url": f"{self.base}{fmt_collection}",
-                                 "magiceden logo": self.logo,
-                                 "collection website": collection_website,
-                                 "twitter link": twitter_url,
-                                 "discord server": discord_url,
-                                 "stats": {"floor price": f"{floor_price / self.lamport} {self.symbol}",
-                                           "listed count": listed_count,
-                                           "total volume": f"{(total_volume / self.lamport):.2f}{self.symbol}",
-                                           "avg price 24hr": f"{(avgPrice24hr / self.lamport):.2f}{self.symbol}", }
-                                }
+            # GET TOTAL SUPPLY AND UNIQUE HOLDERS
+            # url = f'https://api-mainnet.magiceden.io/rpc/getCollectionHolderStats/{collection.strip().replace(" ","_")}'
+            # res = requests.get(url, headers=self.headers)
+            # res_json = res.json().get("results")
+            # total_supply = res_json.get('totalSupply')
+            # unique_holders = res_json.get('uniqueHolders')
+            if None in [floor_price, total_volume, avgPrice24hr]:
+                return None, self.logo
+            collection_dictionary = {"name": name,
+                                     "image": image_url,
+                                     "collection_magiceden_url": f"{self.base}{fmt_collection}",
+                                     "magiceden logo": self.logo,
+                                     "collection website": collection_website,
+                                     "twitter link": twitter_url,
+                                     "discord server": discord_url,
+                                     "stats": {"floor price": f"{floor_price / self.lamport} {self.symbol}",
+                                               "listed count": listed_count,
+                                               "total volume": f"{(total_volume / self.lamport):.2f}{self.symbol}",
+                                               "avg price 24hr": f"{(avgPrice24hr / self.lamport):.2f}{self.symbol}", }
+                                     }
+        await session.close()
+
         return collection_dictionary
 
-    def get_popular_collections(self, timeframe=24):
+    async def get_popular_collections(self, timeframe=24):
         # Avaialable timeframes: 5m, 15m, 1h, 6h, 24h, 7d, 30d
         if timeframe not in [5, 15, 1, 6, 24, 7, 30]:
             return "Unavailable timeframe"
         time_keys = {5: "top5m", 15: "top15m", 1: "top1h",
                      6: "top6h", 24: "top24h", 7: "top7d", 30: "top30d"}
         url = f'https://stats-mainnet.magiceden.io/collection_stats/popular_collections'
-        res = requests.get(url, headers=self.headers)
-        res_json = res.json().get(time_keys.get(timeframe))
+        session = aiohttp.ClientSession()
+        async with session.get(url, headers=self.headers) as res:
+        # res = requests.get(url, headers=self.headers)
+            res_json = await res.json().get(time_keys.get(timeframe))
         # Response example for 5 minutes:
         # {
         #     "collectionSymbol": "infected_mob",
@@ -83,12 +91,11 @@ class Magiceden:
         #     "rank": 1,
         #     "description": "A science experiment gone completely wrong. 7777 deranged and savage mobsters wreaking havoc in the streets of Solana."
         # }
+        await session.close()
         # return res_json
 # me = Magiceden()
 # print(me.get_collection_details("chimpnana"))
 # print(str(timeit.timeit('(me.get_collection_details("chimpnana"))', setup='from __main__ import me')))
-
-
 
 
 # api-devnet.magiceden.dev/v2/collections?offset=0&limit=200
