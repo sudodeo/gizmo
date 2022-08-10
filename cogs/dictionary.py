@@ -14,7 +14,7 @@ class Dictionary(commands.Cog):
     async def search(self, interaction: discord.Interaction, word: str):
         """Search word in dictionary"""
         time = datetime.now()
-        definition, part_of_speech = self.dictionary.word_search(word)
+        definition, part_of_speech = await self.dictionary.word_search(word)
         # print(definition)
         if definition:
             embed = discord.Embed(
@@ -33,7 +33,7 @@ class Dictionary(commands.Cog):
     async def word_of_the_day(self, interaction: discord.Interaction):
         """Returns word of the day"""
         time = datetime.now()
-        word, part_of_speech, definition, examples, note = self.dictionary.word_of_the_day().values()
+        word, part_of_speech, definition, examples, note = await self.dictionary.word_of_the_day().values()
         # print(word)
         embed = discord.Embed(title=word, description=definition,
                               colour=discord.Colour.random(), timestamp=time)
