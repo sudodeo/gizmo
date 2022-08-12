@@ -17,12 +17,13 @@ class AntiBozo:
         async with session.get(url, headers=headers) as res:
             word_of_the_day_dictionary = {}
 
-            word = await res.json().get('word')
-            part_of_speech = res.json().get('definitions')[
+            res_json = await res.json()
+            word = res_json.get('word')
+            part_of_speech = res_json.get('definitions')[
                 0].get('partOfSpeech')
-            definition = res.json().get('definitions')[0].get('text')
-            examples = res.json().get('examples')[0].get('text')
-            note = res.json().get('note')
+            definition = res_json.get('definitions')[0].get('text')
+            examples = res_json.get('examples')[0].get('text')
+            note = res_json.get('note')
 
             word_of_the_day_dictionary.update(
                 {'word': word,
