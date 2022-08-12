@@ -71,7 +71,7 @@ class Opensea:
 
                     except UniqueViolationError:
                         continue
-                print(f"uploading {self.offset}")
+                # print(f"uploading {self.offset}")
 
                 # 300 is the limit but i'm using 250 because i feel like it's more efficient, i don't know lol
                 self.offset += 250
