@@ -85,10 +85,16 @@ class CoralcubeCog(commands.Cog, name="Coralcube"):
 
     @cc.error
     async def on_cc_error(self, ctx, error: discord.app_commands.AppCommandError):
+        error = getattr(error, 'original', error)
         owner = self.bot.get_user(741308876204408854)
         await ctx.reply("An error occured. Contact grim.reaper#9626 for support", delete_after=5)
         await owner.send(f"{error}\n{ctx.kwargs}")
 
+    # @collection_autocomplete.error
+    # async def on_collection_autocomplete_error(self, ctx, error: discord.app_commands.AppCommandError):
+    #     owner = self.bot.get_user(741308876204408854)
+    #     await ctx.reply("An error occured. Contact grim.reaper#9626 for support", delete_after=5)
+    #     await owner.send(f"{error}\n{ctx.kwargs}")
 
 async def setup(bot):
     await bot.add_cog(CoralcubeCog(bot))

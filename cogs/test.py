@@ -8,7 +8,7 @@ class Test(commands.Cog):
     @commands.hybrid_command(name="ping")
     async def ping(self, ctx: commands.Context) -> None:
         """ Check if bot is online """
-        await ctx.reply(f"Pong!->\nBot Speed: {(self.bot.latency * 1000):.2f}ms")
+        await ctx.reply(f"Pong!\nBot Speed: {(self.bot.latency * 1000):.2f}ms")
     # @commands.command()
     # async def welcome(self, ctx, ):
 
@@ -18,13 +18,23 @@ class Test(commands.Cog):
     async def purge(self, ctx: commands.Context, amount: int) -> None:
         """ Purge messages """
         await ctx.channel.purge(limit=amount)
-        await ctx.send(f'{amount} messages deleted')
+        await ctx.send(f'{amount} messages deleted', delete_after=5)
 
     @purge.error
     async def purge_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
         """ Purge error """
         await ctx.send(f'Error: {error}')
 
+    def is_in_guild(guild_id):
+        async def predicate(ctx):
+            return ctx.guild and ctx.guild.id == guild_id
+        return commands.check(predicate)
+
+    # @commands.hybrid_command()
+    # @commands.is_owner()
+    # @is_in_guild(935741302769844244)
+    # async def sync():
+    #     pass
 
 async def setup(bot):
     await bot.add_cog(Test(bot))

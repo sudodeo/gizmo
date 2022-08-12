@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 import random
 import asyncpg
 import aiohttp
@@ -58,8 +60,8 @@ class Opensea:
 
                 for nft_collection in collections:
                     symbol = nft_collection.get("slug")
-                    if "autogen" in symbol or "untitled" in symbol:
-                        continue
+                    # if "autogen" in symbol or "untitled" in symbol:
+                    #     continue
                     name = nft_collection.get("name")
 
                     try:

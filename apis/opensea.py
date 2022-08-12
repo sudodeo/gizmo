@@ -1,4 +1,3 @@
-import requests
 import aiohttp
 
 
@@ -20,32 +19,35 @@ class Opensea:
         # print(res.elapsed.total_seconds())
         session = aiohttp.ClientSession()
         async with session.get(url, headers=self.headers) as res:
-            if res.status_code == 404:
+            if res.status == 404:
+                await session.close()
                 return None, self.logo
-            res_json = res.json().get("collection")
+            res_json = await res.json()
+
+            collection = res_json.get("collection")
 
             # Basic info
-            name = res_json.get('name')
-            image_url = res_json.get('image_url')
+            name = collection.get('name')
+            image_url = collection.get('image_url')
             # description = res_json.get('description')
-            discord_url = res_json.get("discord_url")
-            collection_website = res_json.get('external_url')
+            discord_url = collection.get("discord_url")
+            collection_website = collection.get('external_url')
 
-            twitter_username = res_json.get('twitter_username')
+            twitter_username = collection.get('twitter_username')
             if twitter_username:
                 twitter_url = self.twitter_base + twitter_username.strip()
             else:
                 twitter_url = None
 
             # Stats
-            total_supply = res_json.get("stats").get('total_supply')
-            floor_price = res_json.get("stats").get('floor_price')
+            total_supply = collection.get("stats").get('total_supply')
+            floor_price = collection.get("stats").get('floor_price')
             # listed_count = res_json.get("stats").get('listed_count')
-            total_volume = res_json.get("stats").get('total_volume')
-            avgPrice24hr = res_json.get("stats").get('one_day_average_price')
-            unique_holders = res_json.get("stats").get('num_owners')
+            total_volume = collection.get("stats").get('total_volume')
+            avgPrice24hr = collection.get("stats").get('one_day_average_price')
+            unique_holders = collection.get("stats").get('num_owners')
             if floor_price == None:
-                return None, self.logo
+                floor_price = '---'
             collection_dictionary = {"name": name,
                                      "opensea_logo": self.logo,
                                      "image": image_url,
