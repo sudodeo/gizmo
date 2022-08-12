@@ -1,5 +1,6 @@
 from discord.ext import commands, tasks
 # from settings import *
+import asyncpg
 import discord
 import logging
 from discord import app_commands
@@ -16,6 +17,7 @@ MY_GUILD = discord.Object(id=935741302769844244)
 
 
 class MyBot(commands.Bot):
+    POSTGRES_URI = config('POSTGRES_URI')
     def __init__(self):
         intents = discord.Intents.default()
         intents.members = True
@@ -33,6 +35,7 @@ class MyBot(commands.Bot):
         # self.background_task.start()
         self.loop.create_task(self.startup())
         self.session = aiohttp.ClientSession()
+        self.conn = await asyncpg.connect(self.POSTGRES_URI)
 
         for file_name in os.listdir("./cogs"):
 
