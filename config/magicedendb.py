@@ -2,10 +2,13 @@ import random
 import asyncpg
 import aiohttp
 import asyncio
+from decouple import config
 from asyncpg.exceptions import UniqueViolationError
 
 
 class Magiceden:
+    POSTGRES_URI = config('POSTGRES_URI')
+
     def __init__(self) -> None:
 
         self.user_agents = [
@@ -21,11 +24,10 @@ class Magiceden:
         self.offset = 0
 
     async def connect_database(self):
-        self.conn = await asyncpg.connect(
-            "postgresql://jiggydeo:jiggydeo@localhost/magiceden")
+        self.conn = await asyncpg.connect(self.POSTGRES_URI)
 
         await self.conn.execute('''
-        CREATE TABLE IF NOT EXISTS nftCollections (
+        CREATE TABLE IF NOT EXISTS magiceden (
             id serial PRIMARY KEY,
             symbol text UNIQUE,
             name text 
@@ -59,7 +61,7 @@ class Magiceden:
 
                     try:
                         await self.conn.execute('''
-                        INSERT INTO nftCollections(symbol, name) VALUES($1, $2)
+                        INSERT INTO magiceden(symbol, name) VALUES($1, $2)
                         ''', symbol, name)
 
                     except UniqueViolationError:

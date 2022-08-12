@@ -2,10 +2,13 @@ import random
 import asyncpg
 import aiohttp
 import asyncio
+from decouple import config
 from asyncpg.exceptions import UniqueViolationError
 
 
 class Opensea:
+    POSTGRES_URI = config('POSTGRES_URI')
+
     def __init__(self) -> None:
 
         self.user_agents = [
@@ -21,11 +24,10 @@ class Opensea:
         self.offset = 0
 
     async def connect_database(self):
-        self.conn = await asyncpg.connect(
-            "postgresql://jiggydeo:jiggydeo@localhost/magiceden")
+        self.conn = await asyncpg.connect(self.POSTGRES_URI)
 
         await self.conn.execute('''
-        CREATE TABLE IF NOT EXISTS nftCollections3 (
+        CREATE TABLE IF NOT EXISTS opensea (
             id serial PRIMARY KEY,
             symbol text UNIQUE,
             name text 
@@ -62,12 +64,12 @@ class Opensea:
 
                     try:
                         await self.conn.execute('''
-                        INSERT INTO nftCollections3(symbol, name) VALUES($1, $2)
+                        INSERT INTO opensea(symbol, name) VALUES($1, $2)
                         ''', symbol, name)
 
                     except UniqueViolationError:
                         continue
-                # print(f"uploading {self.offset}")
+                print(f"uploading {self.offset}")
 
                 # 300 is the limit but i'm using 250 because i feel like it's more efficient, i don't know lol
                 self.offset += 250
