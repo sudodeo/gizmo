@@ -1,3 +1,4 @@
+from typing import List
 from unicodedata import name
 import discord
 from discord import app_commands
@@ -10,7 +11,27 @@ class OpenseaCog(commands.Cog, name="Opensea"):
     def __init__(self, bot):
         self.bot = bot
 
+    async def collection_autocomplete(
+        self,
+        interaction: discord.Interaction,
+        current: str,
+    ) -> List[app_commands.Choice[str]]:
+
+        if current != []:
+            db = self.bot.conn
+            # % is a wildcard
+            symbols = await db.fetch(f"""SELECT * FROM opensea 
+                                        WHERE LOWER(name) LIKE '%{current.lower()}%' 
+                                        ORDER BY CASE WHEN LOWER(name) LIKE '{current.lower()}' THEN 0 
+                                                    WHEN LOWER(name) LIKE '{current.lower()}%' THEN 1
+                                                    WHEN LOWER(name) LIKE '%{current.lower()}' THEN 3
+                                                        ELSE 2
+                                                        END""")
+            if symbols:
+                return [app_commands.Choice(value=symbol['symbol'], name=symbol['name']) for symbol in symbols][:25]
+
     @commands.hybrid_command()
+    @app_commands.autocomplete(collection=collection_autocomplete)
     async def os(self, ctx: commands.Context, *, collection: str):
         """Get collection details from Opensea marketplace"""
         async with ctx.typing():

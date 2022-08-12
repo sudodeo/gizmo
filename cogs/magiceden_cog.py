@@ -16,13 +16,18 @@ class MagicedenCog(commands.Cog, name="Magiceden"):
         current: str,
     ) -> List[app_commands.Choice[str]]:
 
-        fruits = {'DeGods': 'degods', 'Okay Bears': 'okay_bears', "Cets On Creck": "cets_on_creck",
-                  "Primates": "primates", "Vandals": "vandal_city", "Blocksmith Labs": "blocksmith_labs"}
-        # print(current)
-        return [
-            app_commands.Choice(value=fruits[fruit], name=fruit)
-            for fruit in fruits.keys() if current.lower() in fruit.lower()
-        ][:25]
+        if current != []:
+            db = self.bot.conn
+            # % is a wildcard
+            symbols = await db.fetch(f"""SELECT * FROM magiceden 
+                                        WHERE LOWER(name) LIKE '%{current.lower()}%' 
+                                        ORDER BY CASE WHEN LOWER(name) LIKE '{current.lower()}' THEN 0 
+                                                    WHEN LOWER(name) LIKE '{current.lower()}%' THEN 1
+                                                    WHEN LOWER(name) LIKE '%{current.lower()}' THEN 3
+                                                        ELSE 2
+                                                        END""")
+            if symbols:
+                return [app_commands.Choice(value=symbol['symbol'], name=symbol['name']) for symbol in symbols][:25]
 
     @commands.hybrid_command()
     @app_commands.autocomplete(collection=collection_autocomplete)

@@ -1,3 +1,4 @@
+from typing import List
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -9,7 +10,27 @@ class CoralcubeCog(commands.Cog, name="Coralcube"):
     def __init__(self, bot):
         self.bot = bot
 
+    async def collection_autocomplete(
+        self,
+        interaction: discord.Interaction,
+        current: str,
+    ) -> List[app_commands.Choice[str]]:
+
+        if current != []:
+            db = self.bot.conn
+            # % is a wildcard
+            symbols = await db.fetch(f"""SELECT * FROM coralcube 
+                                        WHERE LOWER(name) LIKE '%{current.lower()}%' 
+                                        ORDER BY CASE WHEN LOWER(name) LIKE '{current.lower()}' THEN 0 
+                                                    WHEN LOWER(name) LIKE '{current.lower()}%' THEN 1
+                                                    WHEN LOWER(name) LIKE '%{current.lower()}' THEN 3
+                                                        ELSE 2
+                                                        END""")
+            if symbols:
+                return [app_commands.Choice(value=symbol['symbol'], name=symbol['name']) for symbol in symbols][:25]
+
     @commands.hybrid_command()
+    @app_commands.autocomplete(collection=collection_autocomplete)
     async def cc(self, ctx, *, collection: str):
         """Get collection details from Coralcube marketplace"""
         async with ctx.typing():
@@ -64,7 +85,7 @@ class CoralcubeCog(commands.Cog, name="Coralcube"):
 
     @cc.error
     async def on_cc_error(self, ctx, error: discord.app_commands.AppCommandError):
-        owner = self.bot.get_user(741308876204408854)        
+        owner = self.bot.get_user(741308876204408854)
         await ctx.reply("An error occured. Contact grim.reaper#9626 for support", delete_after=5)
         await owner.send(f"{error}\n{ctx.kwargs}")
 
