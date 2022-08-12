@@ -1,3 +1,4 @@
+from typing import Literal, Optional
 from discord.ext import commands, tasks
 # from settings import *
 import asyncpg
@@ -41,6 +42,41 @@ class MyBot(commands.Bot):
 
             if file_name.endswith(".py") and file_name != "__init__.py":
                 await bot.load_extension(f"cogs.{file_name[:-3]}")
+
+        @bot.command()
+        @commands.is_owner()
+        @commands.guild_only()
+        async def sync(
+        ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:
+            if not guilds:
+                if spec == "~":
+                    synced = await ctx.bot.tree.sync(guild=MY_GUILD)
+                elif spec == "*":
+                    ctx.bot.tree.copy_global_to(guild=MY_GUILD)
+                    synced = await ctx.bot.tree.sync(guild=MY_GUILD)
+                elif spec == "^":
+                    ctx.bot.tree.clear_commands(guild=MY_GUILD)
+                    await ctx.bot.tree.sync(guild=MY_GUILD)
+                    synced = []
+                else:
+                    synced = await ctx.bot.tree.sync()
+
+                await ctx.send(
+                    f"Synced {len(synced)} commands {'globally' if spec is None else 'to the current guild.'}"
+                )
+                return
+            
+            ret = 0
+            for guild in guilds:
+                try:
+                    await ctx.bot.tree.sync(guild=guild)
+                except discord.HTTPException:
+                    pass
+                else:
+                    ret += 1
+
+            await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
+
         # self.tree.copy_global_to(guild=MY_GUILD)
         # await self.tree.sync(guild=MY_GUILD)
 
@@ -53,7 +89,7 @@ class MyBot(commands.Bot):
     # async def background_task(self):
     #     await self.change_presence(activity=discord.Activity(name=f">help ({len(self.guilds)} servers)", type=3))
     #     print('Running background task...')
-
+    @tasks.loop(minutes=30)
     async def startup(self):
         await self.wait_until_ready()
         await self.change_presence(activity=discord.Activity(name=f">help on {len(self.guilds)} servers", type=3))
