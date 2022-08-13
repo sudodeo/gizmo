@@ -17,18 +17,17 @@ class OpenseaCog(commands.Cog, name="Opensea"):
         current: str,
     ) -> List[app_commands.Choice[str]]:
 
-        if current != []:
-            db = self.bot.conn
-            # % is a wildcard
-            symbols = await db.fetch(f"""SELECT * FROM opensea 
-                                        WHERE LOWER(name) LIKE '%{current.lower()}%' 
-                                        ORDER BY CASE WHEN LOWER(name) LIKE '{current.lower()}' THEN 0 
-                                                    WHEN LOWER(name) LIKE '{current.lower()}%' THEN 1
-                                                    WHEN LOWER(name) LIKE '%{current.lower()}' THEN 3
-                                                        ELSE 2
-                                                        END""")
-            if symbols:
-                return [app_commands.Choice(value=symbol['symbol'], name=symbol['name']) for symbol in symbols][:25]
+        db = self.bot.conn
+        # % is a wildcard
+        symbols = await db.fetch(f"""SELECT * FROM opensea 
+                                    WHERE LOWER(name) LIKE '%{current.lower()}%' 
+                                    ORDER BY CASE WHEN LOWER(name) LIKE '{current.lower()}' THEN 0 
+                                                WHEN LOWER(name) LIKE '{current.lower()}%' THEN 1
+                                                WHEN LOWER(name) LIKE '%{current.lower()}' THEN 3
+                                                    ELSE 2
+                                                    END, name ASC LIMIT 30""")
+
+        return [app_commands.Choice(value=symbol['symbol'], name=symbol['name']) for symbol in symbols if symbol['name'] != ""][:25]
 
     @commands.hybrid_command()
     @app_commands.autocomplete(collection=collection_autocomplete)
@@ -80,7 +79,8 @@ class OpenseaCog(commands.Cog, name="Opensea"):
                 await ctx.reply(embed=embed)
 
     @os.error
-    async def on_os_error(self, ctx: commands.Context, error: discord.app_commands.AppCommandError):
+    async def on_os_error(self, ctx: commands.Context, error):
+        error = getattr(error, 'original', error)
         owner = self.bot.get_user(741308876204408854)
         await ctx.reply("An error occured. Contact grim.reaper#9626 for support", delete_after=5)
         await owner.send(f"{error}\n{ctx.kwargs}")
