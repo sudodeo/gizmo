@@ -83,7 +83,8 @@ class MagicedenCog(commands.Cog, name="Magiceden"):
                 await ctx.reply(embed=embed)
 
     @me.error
-    async def on_me_error(self, ctx: commands.Context, error: discord.app_commands.AppCommandError):
+    async def on_me_error(self, ctx: commands.Context, error):
+        error = getattr(error, 'original', error)
         owner = self.bot.get_user(741308876204408854)
         await ctx.reply("An error occured. Contact grim.reaper#9626 for support", delete_after=5)
         await owner.send(f"{error}\n{ctx.kwargs}")
