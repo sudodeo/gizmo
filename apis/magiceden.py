@@ -44,8 +44,13 @@ class Magiceden:
             # res_json = res.json().get("results")
             # total_supply = res_json.get('totalSupply')
             # unique_holders = res_json.get('uniqueHolders')
-            if None in [floor_price, total_volume, avgPrice24hr]:
-                return None, self.logo
+            
+            if floor_price == None:
+                floor_price = 0
+            if total_volume == None:
+                total_volume = 0
+            if avgPrice24hr == None:
+                avgPrice24hr = 0
             collection_dictionary = {"name": name,
                                      "image": image_url,
                                      "collection_magiceden_url": f"{self.base}{fmt_collection}",
@@ -93,6 +98,49 @@ class Magiceden:
         # }
         await session.close()
         # return res_json
+
+    async def wallet_tracker(self, wallet:str):
+        url = f"https://api-mainnet.magiceden.dev/v2/wallets/{wallet}/activities?offset=0&limit=10"
+        session = aiohttp.ClientSession()
+        async with session.get(url, headers=self.headers) as res:
+            res_json = await res.json()
+            # ERROR
+        # {
+        #     "errors": [
+        #         {
+        #             "value": "ade",
+        #             "msg": "invalid wallet_address",
+        #             "param": "wallet_address",
+        #             "location": "params"
+        #         }
+        #     ]
+        # }
+            mint_token = res_json.get("tokenMint")
+            transaction_type = res_json.get("type")
+            transaction_signature = res_json.get("signature")
+            symbol = res_json.get("collectionSymbol")
+            buyer = res_json.get("buyer")
+            seller = res_json.get("seller")
+            price = res_json.get("price")
+            token_url = f"https://api-mainnet.magiceden.dev/v2/tokens/{mint_token}"
+            async with session.get(token_url, headers=self.headers) as res2:
+                res2_json = await res2.json()
+                nft_name = res2_json.get("name")
+                nft_image = res2_json.get("image")
+        # GET TOKEN AFTER REQUEST
+        # https://api-mainnet.magiceden.dev/v2/tokens/CcYH3HBXfUrPW74Dy457yXxLwuAiAoot7ZvS23vSc1YG
+        
+
+
+
+
+
+
+
+
+
+
+
 # me = Magiceden()
 # print(me.get_collection_details("chimpnana"))
 # print(str(timeit.timeit('(me.get_collection_details("chimpnana"))', setup='from __main__ import me')))
