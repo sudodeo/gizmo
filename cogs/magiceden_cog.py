@@ -4,6 +4,7 @@ from discord.ext import commands
 from apis.magiceden import Magiceden
 from datetime import datetime
 from typing import List
+from discord.errors import HTTPException
 
 
 class MagicedenCog(commands.Cog, name="Magiceden"):
@@ -54,12 +55,15 @@ class MagicedenCog(commands.Cog, name="Magiceden"):
                                 value=stats.get("avg price 24hr") or "None")
                 embed.add_field(name="Listed NFTs", value=stats.get(
                     "listed count") or "None")
-                embed.add_field(
-                    name="Website", value=f"[Visit]({website})" or "None")
-                embed.add_field(
-                    name="Twitter", value=f"[View]({twitter})" or "None")
-                embed.add_field(
-                    name="Discord", value=f"[Join]({discord_server})" or "None")
+                if website not in [None, ""]:
+                    embed.add_field(
+                        name="Website", value=f"[Visit]({website})")
+                if twitter not in [None, ""]:
+                    embed.add_field(
+                        name="Twitter", value=f"[@{twitter}]")
+                if discord_server not in [None, ""]:
+                    embed.add_field(
+                        name="Discord Server", value=f"[Join]({discord_server})")
                 embed.set_thumbnail(url=image)
 
                 embed.set_footer(
@@ -85,6 +89,8 @@ class MagicedenCog(commands.Cog, name="Magiceden"):
     @me.error
     async def on_me_error(self, ctx: commands.Context, error):
         error = getattr(error, 'original', error)
+        if isinstance(error, HTTPException):
+            pass
         owner = self.bot.get_user(741308876204408854)
         await ctx.reply("An error occured. Contact grim.reaper#9626 for support", delete_after=5)
         await owner.send(f"{error}\n{ctx.kwargs}")
