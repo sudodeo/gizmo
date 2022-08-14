@@ -59,7 +59,7 @@ class MagicedenCog(commands.Cog, name="Magiceden"):
                         name="Website", value=f"[Visit]({website})")
                 if twitter not in [None, ""]:
                     embed.add_field(
-                        name="Twitter", value=f"[@{twitter.split('/')[-1]}]({twitter})")
+                        name="Twitter", value=f"[@{twitter}]")
                 if discord_server not in [None, ""]:
                     embed.add_field(
                         name="Discord Server", value=f"[Join]({discord_server})")

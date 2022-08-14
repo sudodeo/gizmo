@@ -53,15 +53,11 @@ class OpenseaCog(commands.Cog, name="Opensea"):
                                 value=stats.get("avg price 24hr"))
                 embed.add_field(name="Unique Holders",
                                 value=stats.get("unique holders"))
-                if website not in [None, ""]:
-                    embed.add_field(
-                        name="Website", value=f"[Visit]({website})")
-                if twitter not in [None, ""]:
-                    embed.add_field(
-                        name="Twitter", value=f"[@{twitter.split('/')[-1]}]({twitter})")
-                if discord_server not in [None, ""]:
-                    embed.add_field(
-                        name="Discord Server", value=f"[Join]({discord_server})")
+                embed.add_field(
+                    name="Website", value=f"[Visit]({website})")
+                embed.add_field(name="Twitter", value=f"[View]({twitter})")
+                embed.add_field(
+                    name="Discord", value=f"[Join]({discord_server})")
                 embed.set_thumbnail(url=image)
                 embed.set_footer(
                     text="Built by grim.reaper#9626", icon_url=logo)
