@@ -64,7 +64,7 @@ class Coralcube:
                     try:
                         await self.conn.execute('''
                         INSERT INTO coralcube(symbol, name) VALUES($1, $2)
-                        ''', symbol, name)
+                        ON CONFLICT (symbol) DO NOTHING''', symbol, name)
 
                     except UniqueViolationError as e:
                         continue

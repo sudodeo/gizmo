@@ -64,9 +64,10 @@ class Magiceden:
                     try:
                         await self.conn.execute('''
                         INSERT INTO magiceden(symbol, name) VALUES($1, $2)
-                        ''', symbol, name)
+                        ON CONFLICT (symbol) DO NOTHING''', symbol, name)
 
-                    except UniqueViolationError:
+                    except UniqueViolationError as e:
+                        print(e)
                         continue
 
                 # print(f"uploading {self.offset}")

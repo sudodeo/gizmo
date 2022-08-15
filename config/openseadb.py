@@ -67,7 +67,7 @@ class Opensea:
                     try:
                         await self.conn.execute('''
                         INSERT INTO opensea(symbol, name) VALUES($1, $2)
-                        ''', symbol, name)
+                        ON CONFLICT (symbol) DO NOTHING''', symbol, name)
 
                     except UniqueViolationError:
                         continue
