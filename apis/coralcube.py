@@ -40,8 +40,11 @@ class Coralcube:
             unique_holders = collection_data.get('unique_owners')
             seven_day_volume = collection_data.get('volume')
             # avgPrice24hr = collection_data.get('avgPrice24hr') / 1000000000
-            if None in [floor_price, seven_day_volume]:
-                return None, self.logo
+            if floor_price == None:
+                floor_price = 0
+            if seven_day_volume == None:
+                seven_day_volume = 0
+
             collection_dictionary = {"name": name,
                                      "image": image_url,
                                      "collection_coralcube_url": f"{self.base}{fmt_collection}",

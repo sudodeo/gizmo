@@ -39,12 +39,12 @@ class Magiceden:
             avgPrice24hr = res_json.get('avgPrice24hr')
 
             # GET TOTAL SUPPLY AND UNIQUE HOLDERS
-            # url = f'https://api-mainnet.magiceden.io/rpc/getCollectionHolderStats/{collection.strip().replace(" ","_")}'
+            # url = f'https://api-mainnet.magiceden.io/rpc/getCollectionHolderStats/{fmt_collection}'
             # res = requests.get(url, headers=self.headers)
             # res_json = res.json().get("results")
             # total_supply = res_json.get('totalSupply')
             # unique_holders = res_json.get('uniqueHolders')
-            
+
             if floor_price == None:
                 floor_price = 0
             if total_volume == None:
@@ -76,7 +76,7 @@ class Magiceden:
         url = f'https://stats-mainnet.magiceden.io/collection_stats/popular_collections'
         session = aiohttp.ClientSession()
         async with session.get(url, headers=self.headers) as res:
-        # res = requests.get(url, headers=self.headers)
+            # res = requests.get(url, headers=self.headers)
             res_json = await res.json().get(time_keys.get(timeframe))
         # Response example for 5 minutes:
         # {
@@ -99,7 +99,7 @@ class Magiceden:
         await session.close()
         # return res_json
 
-    async def wallet_tracker(self, wallet:str):
+    async def wallet_tracker(self, wallet: str):
         url = f"https://api-mainnet.magiceden.dev/v2/wallets/{wallet}/activities?offset=0&limit=10"
         session = aiohttp.ClientSession()
         async with session.get(url, headers=self.headers) as res:
@@ -129,16 +129,6 @@ class Magiceden:
                 nft_image = res2_json.get("image")
         # GET TOKEN AFTER REQUEST
         # https://api-mainnet.magiceden.dev/v2/tokens/CcYH3HBXfUrPW74Dy457yXxLwuAiAoot7ZvS23vSc1YG
-        
-
-
-
-
-
-
-
-
-
 
 
 # me = Magiceden()
