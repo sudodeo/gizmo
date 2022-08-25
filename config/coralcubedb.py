@@ -29,13 +29,13 @@ class Coralcube:
         self.conn = await asyncpg.connect(self.POSTGRES_URI)
 
         await self.conn.execute('''
-        CREATE TABLE IF NOT EXISTS coralcube (
-            id serial PRIMARY KEY,
-            symbol text UNIQUE,
-            name text 
-        )
-    ''')
-
+        DROP TABLE IF EXISTS coralcube;
+        CREATE TABLE coralcube(
+        id serial PRIMARY KEY,
+        symbol text UNIQUE,
+        name text
+        );
+        ''')
         return await self.scrape_collections()
 
     async def scrape_collections(self):

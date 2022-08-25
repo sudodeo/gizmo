@@ -29,12 +29,13 @@ class Opensea:
         self.conn = await asyncpg.connect(self.POSTGRES_URI)
 
         await self.conn.execute('''
-        CREATE TABLE IF NOT EXISTS opensea (
-            id serial PRIMARY KEY,
-            symbol text UNIQUE,
-            name text 
-        )
-    ''')
+        DROP TABLE IF EXISTS opensea;
+        CREATE TABLE opensea(
+        id serial PRIMARY KEY,
+        symbol text UNIQUE,
+        name text
+        );
+        ''')
 
         return await self.scrape_collections()
 
