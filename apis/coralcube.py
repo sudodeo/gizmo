@@ -150,7 +150,7 @@ class Coralcube:
 
                 if floor_price >= price:
                     await session.close()
-                    return [wall, 0, floor_price / self.lamport, image_url, name, self.base + fmt_collection]
+                    return [total_listings, wall, 0, floor_price / self.lamport, image_url, name, self.base + fmt_collection]
 
                 collection_items = res_json.get("items")
                 price_list = []
