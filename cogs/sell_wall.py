@@ -38,16 +38,19 @@ class SellWall(commands.Cog, name="Sell Wall"):
 
             if type(collection_details) == list:
 
-                listed_count, percentage, floor_price, collection_image, collection_name, collection_url = collection_details
+                total_listings, listed_count, percentage, floor_price, collection_image, collection_name, collection_url = collection_details
 
                 embed = discord.Embed(title=collection_name, url=collection_url,
                                       color=discord.Colour.green(), timestamp=time)
 
                 embed.add_field(
-                    name="Sell Wall", value=f"There are {listed_count} NFTs listed under {price}◎ ({percentage}%)")
+                    name="Sell Wall", value=f"There are {listed_count} NFTs listed under {price} ◎ \n({percentage}%)")
 
                 embed.add_field(name="Floor Price",
-                                value=f"{floor_price}◎", inline=False)
+                                value=f"{floor_price} ◎", inline=False)
+
+                embed.add_field(name="Total Listings",
+                                value=f"{total_listings}")
 
                 embed.set_thumbnail(url=collection_image)
 
