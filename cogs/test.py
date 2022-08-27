@@ -18,7 +18,7 @@ class Test(commands.Cog):
     async def cleanup(self, ctx: commands.Context, amount: int) -> None:
         """ Purge messages """
         await ctx.channel.purge(limit=amount)
-        await ctx.send(f'{amount} messages deleted', delete_after=5)
+        await ctx.send(f'{amount} messages deleted', delete_after=5.0, ephemeral=True)
 
     @cleanup.error
     async def cleanup_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
