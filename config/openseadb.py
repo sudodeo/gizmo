@@ -29,8 +29,7 @@ class Opensea:
         self.conn = await asyncpg.connect(self.POSTGRES_URI)
 
         await self.conn.execute('''
-        DROP TABLE IF EXISTS opensea;
-        CREATE TABLE opensea(
+        CREATE TABLE IF NOT EXISTS opensea(
         id serial PRIMARY KEY,
         symbol text UNIQUE,
         name text
@@ -50,13 +49,18 @@ class Opensea:
                 if res.status != 200:
                     print(f"Error: {res.status}")
                     await session.close()
+                    await self.close_database()
                     break
                 res_json = await res.json()
 
                 collections = res_json.get('collections')
                 if collections == []:
                     print('No more collections')
+                    await self.conn.execute('''
+                    CREATE UNIQUE INDEX IF NOT EXISTS opensea_name_idx ON opensea (name, symbol);
+                    ''')
                     await session.close()
+                    await self.close_database()
                     break
 
                 for nft_collection in collections:

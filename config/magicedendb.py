@@ -29,8 +29,7 @@ class Magiceden:
         self.conn = await asyncpg.connect(self.POSTGRES_URI)
 
         await self.conn.execute('''
-        DROP TABLE IF EXISTS magiceden;
-        CREATE TABLE magiceden(
+        CREATE TABLE IF NOT EXISTS magiceden(
         id serial PRIMARY KEY,
         symbol text UNIQUE,
         name text
@@ -50,11 +49,16 @@ class Magiceden:
                 if res.status != 200:
                     print(f"Error: {res.status}")
                     await session.close()
+                    await self.close_database()
                     break
                 res_json = await res.json()
 
                 if res_json == []:
+                    await self.conn.execute('''
+                    CREATE UNIQUE INDEX IF NOT EXISTS magiceden_name_idx ON magiceden (name, symbol);
+                    ''')
                     await session.close()
+                    await self.close_database()
                     break
 
                 for nft_collection in res_json:
@@ -76,7 +80,7 @@ class Magiceden:
                 self.offset += 500
             await session.close()
 
-        return self.close_database()
+        return await self.close_database()
 
     async def close_database(self):
         await self.conn.close()
