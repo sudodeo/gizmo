@@ -28,7 +28,8 @@ class CoralcubeCog(commands.Cog, name="Coralcube"):
         return [app_commands.Choice(value=symbol['symbol'], name=symbol['name']) for symbol in symbols if symbol['name'] != ""][:25]
 
     @commands.hybrid_command()
-    @app_commands.Parameter(name="collection", description="The collection you want to search for", autocomplete=collection_autocomplete)
+    @app_commands.describe(collection="The collection you want to search for")
+    @app_commands.autocomplete(collection=collection_autocomplete)
     async def cc(self, ctx, *, collection: str):
         """Get collection details from Coralcube marketplace"""
         async with ctx.typing():

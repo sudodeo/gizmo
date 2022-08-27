@@ -30,6 +30,7 @@ class MagicedenCog(commands.Cog, name="Magiceden"):
         return [app_commands.Choice(value=symbol['symbol'], name=symbol['name']) for symbol in symbols if symbol['name'] != ""][:25]
 
     @commands.hybrid_command()
+    @app_commands.describe(collection="The collection you want to search for")
     @app_commands.autocomplete(collection=collection_autocomplete)
     async def me(self, ctx: commands.Context, *, collection: str):
         """Get collection details from Magiceden marketplace"""
