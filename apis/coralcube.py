@@ -107,7 +107,7 @@ class Coralcube:
             price (int): The price range to get the sell wall for
 
         Returns:
-            list: [listed_count, percentage, floor_price, collection_image, collection_name, collection_url]
+            list: [total_listings, listed_count, percentage, floor_price, collection_image, collection_name, collection_url]
         """
         price *= self.lamport
         fmt_collection = collection.strip().lower().replace(" ", "_")
@@ -124,13 +124,13 @@ class Coralcube:
             name = collection_data.get('name')
             image_url = collection_data.get('image')
             floor_price = collection_data.get("floor_price")
-            listed_count = collection_data.get("listed_count")
+            total_listings = collection_data.get("listed_count")
             items: list = res_json.get("items")
             highest_listed_price: int = items[0].get("price")
 
             if price > highest_listed_price:
                 await session.close()
-                return [listed_count, 100, floor_price / self.lamport, image_url, name, self.base + fmt_collection]
+                return [total_listings, total_listings, 100, floor_price / self.lamport, image_url, name, self.base + fmt_collection]
         wall = 0
         while True:
             url = f"https://api.coralcube.io/v1/getItems?offset={offset}&page_size=50&ranking=price_asc&symbol={fmt_collection}"
@@ -144,7 +144,7 @@ class Coralcube:
                 collection_data = res_json.get("collection")
                 # Listed NFTs
                 floor_price = collection_data.get("floor_price")
-                listed_count = collection_data.get("listed_count")
+                total_listings = collection_data.get("listed_count")
                 name = collection_data.get('name')
                 image_url = collection_data.get('image')
 
@@ -178,7 +178,7 @@ class Coralcube:
                             wall += i
                             break
                     await session.close()
-                    return [wall, f"{(wall / listed_count * 100):.2f}", floor_price / self.lamport, image_url, name, self.base + fmt_collection]
+                    return [total_listings, wall, f"{(wall / total_listings * 100):.2f}", floor_price / self.lamport, image_url, name, self.base + fmt_collection]
 
 
 # cc = Coralcube()
