@@ -15,20 +15,20 @@ class Test(commands.Cog):
     #     await ctx.send(f'Welcome to my turf bozo <@772786473912631316>')
 
     @commands.hybrid_command()
-    async def purge(self, ctx: commands.Context, amount: int) -> None:
+    async def cleanup(self, ctx: commands.Context, amount: int) -> None:
         """ Purge messages """
         await ctx.channel.purge(limit=amount)
         await ctx.send(f'{amount} messages deleted', delete_after=5)
 
-    @purge.error
-    async def purge_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
+    @cleanup.error
+    async def cleanup_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
         """ Purge error """
         await ctx.send(f'Error: {error}')
 
-    def is_in_guild(guild_id):
-        async def predicate(ctx):
-            return ctx.guild and ctx.guild.id == guild_id
-        return commands.check(predicate)
+    # def is_in_guild(guild_id):
+    #     async def predicate(ctx):
+    #         return ctx.guild and ctx.guild.id == guild_id
+    #     return commands.check(predicate)
 
     # @commands.hybrid_command()
     # @commands.is_owner()
