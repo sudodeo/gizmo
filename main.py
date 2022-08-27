@@ -60,12 +60,12 @@ class MyBot(commands.Bot):
                     synced = []
                 else:
                     synced = await ctx.bot.tree.sync()
-               
-                await self.get_user(self.owner_id).send(f"{'\n'.join(synced)}")
-                
+                              
                 await ctx.send(
                     f"Synced {len(synced)} commands {'globally' if spec is None else 'to the current guild.'}"
                 )
+
+                await self.get_user(self.owner_id).send(f"{synced}")
                 return
             
             ret = 0
