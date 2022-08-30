@@ -65,8 +65,11 @@ class Opensea:
 
                 for nft_collection in collections:
                     symbol = nft_collection.get("slug")
+                    unique_holders = nft_collection.get("stats").get('num_owners')
                     if "autogen" in symbol or "untitled" in symbol:
                         continue
+                    if unique_holders <= 1:
+                        continue    
                     name = nft_collection.get("name")
 
                     try:
