@@ -2,7 +2,7 @@
 
 import random
 import asyncpg
-import aiohttp
+from aiohttp import ClientSession
 import asyncio
 from decouple import config
 from asyncpg.exceptions import UniqueViolationError
@@ -44,41 +44,38 @@ class Magiceden:
         while res_json != []:
             url = f"https://api-mainnet.magiceden.dev/v2/collections?offset={self.offset}&limit=500"
 
-            session = aiohttp.ClientSession()
-            async with session.get(url, headers={'user-agent': random.choice(self.user_agents)}) as res:
-                if res.status != 200:
-                    print(f"Error: {res.status}")
-                    await session.close()
-                    await self.close_database()
-                    break
-                res_json = await res.json()
+            async with ClientSession() as session:
+                async with session.get(url, headers={'user-agent': random.choice(self.user_agents)}) as res:
+                    if res.status != 200:
+                        print(f"Error: {res.status}")
+                        await self.close_database()
+                        break
+                    res_json = await res.json()
 
-                if res_json == []:
-                    await self.conn.execute('''
-                    CREATE UNIQUE INDEX IF NOT EXISTS magiceden_name_idx ON magiceden (name, symbol);
-                    ''')
-                    await session.close()
-                    await self.close_database()
-                    break
-
-                for nft_collection in res_json:
-
-                    symbol = nft_collection.get("symbol")
-                    name = nft_collection.get("name")
-
-                    try:
+                    if res_json == []:
                         await self.conn.execute('''
-                        INSERT INTO magiceden(symbol, name) VALUES($1, $2)
-                        ON CONFLICT (symbol) DO NOTHING''', symbol, name)
+                        CREATE UNIQUE INDEX IF NOT EXISTS magiceden_name_idx ON magiceden (name, symbol);
+                        ''')
+                        await self.close_database()
+                        break
 
-                    except UniqueViolationError as e:
-                        print(e)
-                        continue
+                    for nft_collection in res_json:
 
-                # print(f"uploading {self.offset}")
+                        symbol = nft_collection.get("symbol")
+                        name = nft_collection.get("name")
 
-                self.offset += 500
-            await session.close()
+                        try:
+                            await self.conn.execute('''
+                            INSERT INTO magiceden(symbol, name) VALUES($1, $2)
+                            ON CONFLICT (symbol) DO NOTHING''', symbol, name)
+
+                        except UniqueViolationError as e:
+                            print(e)
+                            continue
+
+                    # print(f"uploading {self.offset}")
+
+                    self.offset += 500
 
         return await self.close_database()
 

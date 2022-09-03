@@ -44,11 +44,13 @@ class Opensea:
         while res_json != []:
             url = f"https://api.opensea.io/api/v1/collections?offset={self.offset}&limit=250"
 
-            # session = aiohttp.ClientSession()
             async with ClientSession() as session:
                 async with session.get(url, headers={'user-agent': random.choice(self.user_agents)}) as res:
                     if res.status != 200:
                         print(f"Error: {res.status}")
+                        await self.conn.execute('''
+                        CREATE UNIQUE INDEX IF NOT EXISTS opensea_name_idx ON opensea (name, symbol);
+                        ''')
                         await self.close_database()
                         break
                     res_json = await res.json()
@@ -64,11 +66,12 @@ class Opensea:
 
                     for nft_collection in collections:
                         symbol = nft_collection.get("slug")
-                        unique_holders = nft_collection.get("stats").get('num_owners')
+                        unique_holders = nft_collection.get(
+                            "stats").get('num_owners')
                         if "autogen" in symbol or "untitled" in symbol:
                             continue
                         if unique_holders <= 1:
-                            continue    
+                            continue
                         name = nft_collection.get("name")
 
                         try:
