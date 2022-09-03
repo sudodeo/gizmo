@@ -32,7 +32,12 @@ class Magiceden:
         CREATE TABLE IF NOT EXISTS magiceden(
         id serial PRIMARY KEY,
         symbol text UNIQUE,
-        name text
+        name text,
+        ATH int,
+        ATH_date date,
+        ATL int,
+        ATL_date date,
+        last_scraped_index int
         );
         ''')
 
