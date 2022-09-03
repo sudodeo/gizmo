@@ -141,7 +141,9 @@ class Magiceden:
         # GET TOKEN AFTER REQUEST
         # https://api-mainnet.magiceden.dev/v2/tokens/CcYH3HBXfUrPW74Dy457yXxLwuAiAoot7ZvS23vSc1YG
 
-
+        async def mint_tracker(self, collection: str):
+            fmt_collection = collection.strip().lower().replace(" ", "_")
+            
 # me = Magiceden()
 # print(me.get_collection_details("chimpnana"))
 # print(str(timeit.timeit('(me.get_collection_details("chimpnana"))', setup='from __main__ import me')))

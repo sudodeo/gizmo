@@ -2,7 +2,7 @@
 
 import random
 import asyncpg
-import aiohttp
+from aiohttp import ClientSession
 import asyncio
 from decouple import config
 from asyncpg.exceptions import UniqueViolationError
@@ -44,46 +44,44 @@ class Opensea:
         while res_json != []:
             url = f"https://api.opensea.io/api/v1/collections?offset={self.offset}&limit=250"
 
-            session = aiohttp.ClientSession()
-            async with session.get(url, headers={'user-agent': random.choice(self.user_agents)}) as res:
-                if res.status != 200:
-                    print(f"Error: {res.status}")
-                    await session.close()
-                    await self.close_database()
-                    break
-                res_json = await res.json()
+            # session = aiohttp.ClientSession()
+            async with ClientSession() as session:
+                async with session.get(url, headers={'user-agent': random.choice(self.user_agents)}) as res:
+                    if res.status != 200:
+                        print(f"Error: {res.status}")
+                        await self.close_database()
+                        break
+                    res_json = await res.json()
 
-                collections = res_json.get('collections')
-                if collections == []:
-                    print('No more collections')
-                    await self.conn.execute('''
-                    CREATE UNIQUE INDEX IF NOT EXISTS opensea_name_idx ON opensea (name, symbol);
-                    ''')
-                    await session.close()
-                    await self.close_database()
-                    break
-
-                for nft_collection in collections:
-                    symbol = nft_collection.get("slug")
-                    unique_holders = nft_collection.get("stats").get('num_owners')
-                    if "autogen" in symbol or "untitled" in symbol:
-                        continue
-                    if unique_holders <= 1:
-                        continue    
-                    name = nft_collection.get("name")
-
-                    try:
+                    collections = res_json.get('collections')
+                    if collections == []:
+                        print('No more collections')
                         await self.conn.execute('''
-                        INSERT INTO opensea(symbol, name) VALUES($1, $2)
-                        ON CONFLICT (symbol) DO NOTHING''', symbol, name)
+                        CREATE UNIQUE INDEX IF NOT EXISTS opensea_name_idx ON opensea (name, symbol);
+                        ''')
+                        await self.close_database()
+                        break
 
-                    except UniqueViolationError:
-                        continue
-                # print(f"uploading {self.offset}")
+                    for nft_collection in collections:
+                        symbol = nft_collection.get("slug")
+                        unique_holders = nft_collection.get("stats").get('num_owners')
+                        if "autogen" in symbol or "untitled" in symbol:
+                            continue
+                        if unique_holders <= 1:
+                            continue    
+                        name = nft_collection.get("name")
 
-                # 300 is the limit but i'm using 250 because i feel like it's more efficient, i don't know lol
-                self.offset += 250
-            await session.close()
+                        try:
+                            await self.conn.execute('''
+                            INSERT INTO opensea(symbol, name) VALUES($1, $2)
+                            ON CONFLICT (symbol) DO NOTHING''', symbol, name)
+
+                        except UniqueViolationError:
+                            continue
+                    # print(f"uploading {self.offset}")
+
+                    # 300 is the limit but i'm using 250 because i feel like it's more efficient, i don't know lol
+                    self.offset += 250
 
         return await self.close_database()
 
