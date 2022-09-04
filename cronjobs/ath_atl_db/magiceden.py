@@ -18,9 +18,14 @@ from asyncpg.exceptions import UniqueViolationError
 # Explanation here: https://stackoverflow.com/a/70706028
 # Documentation for httpx: https://www.python-httpx.org/http2/
 
-logging.basicConfig(filename='../../magiceden_ath_atl.log', encoding='utf-8',
-                    filemode='a', level=logging.INFO, format='%(levelname)s:%(message)s')
+# works only in python 3.9+
+# logging.basicConfig(filename='../../magiceden_ath_atl.log', encoding='utf-8',
+#                     filemode='a', level=logging.INFO, format='%(levelname)s:%(message)s')
 
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+handler = logging.FileHandler('../../magiceden_ath_atl.log', 'a', 'utf-8')
+root_logger.addHandler(handler)
 
 class Magiceden:
 
