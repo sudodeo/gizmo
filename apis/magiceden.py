@@ -141,12 +141,75 @@ class Magiceden:
         # GET TOKEN AFTER REQUEST
         # https://api-mainnet.magiceden.dev/v2/tokens/CcYH3HBXfUrPW74Dy457yXxLwuAiAoot7ZvS23vSc1YG
 
-        async def mint_tracker(self, collection: str):
-            fmt_collection = collection.strip().lower().replace(" ", "_")
-            
+    async def mint_tracker(self, collection: str):
+        # get all collections on launchpad
+        # https://api-mainnet.magiceden.io/launchpad_collections
+        fmt_collection = collection.strip().lower().replace(" ", "_")
+        url = f"https://api-mainnet.magiceden.io/launchpads/collection name"
+
+        #  response example
+        #  {
+        #     "name": "Aaron Jones: Showtyme Collection | Phantasia",
+        #     "symbol": "aaron_jones",
+        #     "image": "https://i.imgur.com/2NBkbSZ.mp4?ext=mp4",
+        #     "description": "Aaron Jones, running back for the Green Bay Packers, partners with Web3 fantasy sports platform Phantasia to drop his 1st ever autographed NFT collection “Showtyme\"",
+        #     "price": 1,
+        #     "size": 2000,
+        #     "prelaunch": {
+        #         "whitelist": true
+        #     },
+        #     "launchDate": "2022-09-01T15:00:00.000Z",
+        #     "featured": true,
+        #     "published": true,
+        #     "crossmintId": "fafa34af-5de1-4af0-9e56-6965cc6725ea",
+        #     "finished": false,
+        #     "mint": {
+        #         "candyMachineId": "6s8iB4Wk8e7jnTMpbMSpyAqEvQujC4J9HTtjE1Fuw6AK"
+        #     },
+        #     "createdAt": "2022-08-26T02:23:58.119Z",
+        #     "discordLink": "https://discord.com/invite/phantasiasports",
+        #     "websiteLink": "https://phantasia.app/",
+        #     "twitterLink": "https://twitter.com/PhantasiaSports",
+        #     "disableAutolist": false
+        #     "isClaim": false,
+        #     "badges": [
+        #     "state": {
+        #         "candyMachine": "6s8iB4Wk8e7jnTMpbMSpyAqEvQujC4J9HTtjE1Fuw6AK",
+        #         "itemsAvailable": 2000,
+        #         "itemsRedeemed": 166,
+        #         "itemsRedeemedNormal": 166,
+        #         "itemsRedeemedRaffle": 0,
+        #         "itemsRemaining": 1834,
+        #         "raffleTicketsPurchased": 0,
+        #         "stages": [
+        #             {
+        #                 "price": 1000000000,
+        #                 "startTime": "2022-09-01T14:00:00.000Z",
+        #                 "walletLimit": {
+        #                     "fixedLimit": {
+        #                         "limit": 1
+        #                     }
+        #                 },
+        #                 "endTime": "2022-09-01T15:00:00.000Z",
+        #                 "type": "NormalSale",
+        #                 "mintedDuringStage": 17,
+        #                 "previousStageUnmintedSupply": 0
+        #             },
+        #             {
+        #                 "price": 1000000000,
+        #                 "startTime": "2022-09-01T15:01:00.000Z",
+        #                 "walletLimit": {
+        #                     "fixedLimit": {
+        #                         "limit": 3
+        #                     }
+        #                 },
+        #                 "endTime": "2022-09-04T15:00:00.000Z",
+        #                 "type": "NormalSale",
+        #                 "mintedDuringStage": 134,
+        #                 "previousStageUnmintedSupply": 0
+        #             }
+        #         ],
+        #         "goLiveDate": "2022-09-01T14:00:00.000Z"
+        #     },
+        # }
 # me = Magiceden()
-# print(me.get_collection_details("chimpnana"))
-# print(str(timeit.timeit('(me.get_collection_details("chimpnana"))', setup='from __main__ import me')))
-
-
-# api-devnet.magiceden.dev/v2/collections?offset=0&limit=200
