@@ -19,10 +19,10 @@ from asyncpg.exceptions import UniqueViolationError
 # Explanation here: https://stackoverflow.com/a/70706028
 # Documentation for httpx: https://www.python-httpx.org/http2/
 
-
-class Magiceden:
-    logging.basicConfig(filename='../../magiceden_ath_atl.log', encoding='utf-8',
+logging.basicConfig(filename='../../magiceden_ath_atl.log', encoding='utf-8',
                         filemode='a', level=logging.INFO, format='%(levelname)s:%(message)s')
+class Magiceden:
+    
     POSTGRES_URI = config('POSTGRES_URI')
 
     def __init__(self) -> None:
