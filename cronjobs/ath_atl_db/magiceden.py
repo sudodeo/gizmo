@@ -133,6 +133,7 @@ class Magiceden:
                 logging.error(
                     f"Error: {symbol} already exists in the database")
                 return await self.close_database()
+            pause.seconds(2)
             # return print(f"Scraped {symbol}, ath: {ath}, ath_date: {ath_date}, atl: {atl}, atl_date: {atl_date}, last_scraped_index: {last_scraped_index}")
         return await self.close_database()
 
