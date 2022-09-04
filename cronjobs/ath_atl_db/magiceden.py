@@ -4,7 +4,6 @@ from datetime import datetime
 import random
 import asyncpg
 import httpx
-from aiohttp import ClientSession
 import asyncio
 import pause
 import logging
@@ -20,9 +19,11 @@ from asyncpg.exceptions import UniqueViolationError
 # Documentation for httpx: https://www.python-httpx.org/http2/
 
 logging.basicConfig(filename='../../magiceden_ath_atl.log', encoding='utf-8',
-                        filemode='a', level=logging.INFO, format='%(levelname)s:%(message)s')
+                    filemode='a', level=logging.INFO, format='%(levelname)s:%(message)s')
+
+
 class Magiceden:
-    
+
     POSTGRES_URI = config('POSTGRES_URI')
 
     def __init__(self) -> None:
