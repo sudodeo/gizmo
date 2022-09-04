@@ -72,10 +72,10 @@ class Magiceden:
             async with httpx.AsyncClient(http2=True) as client:
                 res = await client.get(url, headers={'user-agent': random.choice(self.user_agents)})
                 if res.status_code != 200:
-                    logging.info("URL: ", url)
+                    logging.info(f"URL: {url}")
                     logging.error(
                         f"Error while making api request: {res.status_code}")
-                    logging.info("Response from server", res.text)
+                    logging.info(f"Response from server: {res.text}")
                     return await self.close_database()
 
                 # response is a list of dictionaries
