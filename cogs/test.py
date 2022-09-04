@@ -17,8 +17,11 @@ class Test(commands.Cog):
     @commands.hybrid_command()
     async def cleanup(self, ctx: commands.Context, amount: int) -> None:
         """ Purge messages """
-        await ctx.channel.purge(limit=amount)
-        await ctx.send(f'{amount} messages deleted', delete_after=5.0, ephemeral=True)
+        if ctx.author.resolved_permissions.manage_messages:
+            await ctx.channel.purge(limit=amount)
+            await ctx.send(f'{amount} messages deleted', delete_after=5.0, ephemeral=True)
+        else:
+            await ctx.send('You do not have the required permissions to use this command', ephemeral=True, delete_after=5.0)
 
     @cleanup.error
     async def cleanup_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
