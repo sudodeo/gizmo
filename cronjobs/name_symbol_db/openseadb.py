@@ -88,7 +88,7 @@ class Opensea:
                             INSERT INTO opensea(symbol, name) VALUES($1, $2)
                             ON CONFLICT (symbol) DO NOTHING''', symbol, name)
 
-                        except UniqueViolationError as e:
+                        except Exception as e:
                             logging.error(
                                 f"Error inserting {symbol} into database: {e}")
                             continue
