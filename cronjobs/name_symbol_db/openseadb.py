@@ -11,7 +11,7 @@ from asyncpg.exceptions import UniqueViolationError
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
 handler = logging.FileHandler(
-    '../../coralcube_name_symbol_db.log', 'a', 'utf-8')
+    '../../opensea_name_symbol_db.log', 'a', 'utf-8')
 root_logger.addHandler(handler)
 
 
