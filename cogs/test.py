@@ -26,6 +26,7 @@ class Test(commands.Cog):
     @cleanup.error
     async def cleanup_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
         """ Purge error """
+        await self.bot.owner.send(f'Error in cleanup: {error}')
         await ctx.send(f'Error: {error}')
 
     # def is_in_guild(guild_id):
