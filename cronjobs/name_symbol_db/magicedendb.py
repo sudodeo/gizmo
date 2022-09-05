@@ -1,11 +1,17 @@
 #!/usr/bin/python3
 
+import logging
 import random
 import asyncpg
 from aiohttp import ClientSession
 import asyncio
 from decouple import config
 from asyncpg.exceptions import UniqueViolationError
+
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+handler = logging.FileHandler('../../magiceden_name_symbol.log', 'a', 'utf-8')
+root_logger.addHandler(handler)
 
 
 class Magiceden:
@@ -52,7 +58,7 @@ class Magiceden:
             async with ClientSession() as session:
                 async with session.get(url, headers={'user-agent': random.choice(self.user_agents)}) as res:
                     if res.status != 200:
-                        print(f"Error: {res.status}")
+                        logging.error(f"Error fetching api: {res.status}")
                         await self.close_database()
                         break
                     res_json = await res.json()
@@ -61,6 +67,8 @@ class Magiceden:
                         await self.conn.execute('''
                         CREATE UNIQUE INDEX IF NOT EXISTS magiceden_name_idx ON magiceden (name, symbol);
                         ''')
+                        logging.info(
+                            'Finished scraping collections, response returned empty list')
                         await self.close_database()
                         break
 
@@ -75,7 +83,8 @@ class Magiceden:
                             ON CONFLICT (symbol) DO NOTHING''', symbol, name)
 
                         except UniqueViolationError as e:
-                            print(e)
+                            logging.error(
+                                f"Error inserting into database: {e}")
                             continue
 
                     # print(f"uploading {self.offset}")
