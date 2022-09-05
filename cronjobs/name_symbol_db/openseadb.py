@@ -1,11 +1,18 @@
 #! /usr/bin/python3
 
+import logging
 import random
 import asyncpg
 from aiohttp import ClientSession
 import asyncio
 from decouple import config
 from asyncpg.exceptions import UniqueViolationError
+
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+handler = logging.FileHandler(
+    '../../coralcube_name_symbol_db.log', 'a', 'utf-8')
+root_logger.addHandler(handler)
 
 
 class Opensea:
@@ -47,7 +54,8 @@ class Opensea:
             async with ClientSession() as session:
                 async with session.get(url, headers={'user-agent': random.choice(self.user_agents)}) as res:
                     if res.status != 200:
-                        print(f"Error: {res.status}")
+                        logging.error(
+                            f"Error fetching data from {url}: {res.status}")
                         await self.conn.execute('''
                         CREATE UNIQUE INDEX IF NOT EXISTS opensea_name_idx ON opensea (name, symbol);
                         ''')
@@ -57,7 +65,8 @@ class Opensea:
 
                     collections = res_json.get('collections')
                     if collections == []:
-                        print('No more collections')
+                        logging.info(
+                            f"Finished scraping {self.offset} collections")
                         await self.conn.execute('''
                         CREATE UNIQUE INDEX IF NOT EXISTS opensea_name_idx ON opensea (name, symbol);
                         ''')
@@ -79,7 +88,9 @@ class Opensea:
                             INSERT INTO opensea(symbol, name) VALUES($1, $2)
                             ON CONFLICT (symbol) DO NOTHING''', symbol, name)
 
-                        except UniqueViolationError:
+                        except UniqueViolationError as e:
+                            logging.error(
+                                f"Error inserting {symbol} into database: {e}")
                             continue
                     # print(f"uploading {self.offset}")
 

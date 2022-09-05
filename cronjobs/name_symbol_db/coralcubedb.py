@@ -1,11 +1,18 @@
 #! /usr/bin/python3
 
+import logging
 import random
 import asyncpg
 from aiohttp import ClientSession
 import asyncio
 from decouple import config
 from asyncpg.exceptions import UniqueViolationError
+
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+handler = logging.FileHandler(
+    '../../coralcube_name_symbol_db.log', 'a', 'utf-8')
+root_logger.addHandler(handler)
 
 
 class Coralcube:
@@ -47,14 +54,19 @@ class Coralcube:
                 async with session.get(url, headers={'user-agent': random.choice(self.user_agents)}) as res:
                     if res.status != 200:
                         print(f"Error: {res.status}")
+                        logging.error(
+                            f"Error fetching collections: {res.status}")
                         await self.close_database()
                         break
+
                     res_json = await res.json()
 
                     if res_json == []:
                         await self.conn.execute('''
                         CREATE UNIQUE INDEX IF NOT EXISTS coralcube_name_idx ON coralcube (name, symbol);
                         ''')
+                        logging.info(
+                            "Finished scraping coralcube collections, response returned empty list")
                         await self.close_database()
                         break
 
@@ -69,6 +81,8 @@ class Coralcube:
                             ON CONFLICT (symbol) DO NOTHING''', symbol, name)
 
                         except UniqueViolationError as e:
+                            logging.error(
+                                f"Error inserting into coralcube: {e}")
                             continue
 
                     # print(f"uploading {self.offset}")
