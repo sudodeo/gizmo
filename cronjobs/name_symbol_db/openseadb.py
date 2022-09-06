@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 import logging
+import pathlib
 import random
 import asyncpg
 from aiohttp import ClientSession
@@ -10,8 +11,9 @@ from asyncpg.exceptions import UniqueViolationError
 
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
+log_path = pathlib.Path.cwd().joinpath('../../opensea_name_symbol_db.log')
 handler = logging.FileHandler(
-    '../../opensea_name_symbol_db.log', 'a', 'utf-8')
+    str(log_path), 'a', 'utf-8')
 root_logger.addHandler(handler)
 
 

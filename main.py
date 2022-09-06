@@ -1,4 +1,5 @@
 from ast import arg
+import pathlib
 from typing import Literal, Optional
 from discord.ext import commands, tasks
 import asyncpg
@@ -12,8 +13,8 @@ import aiohttp
 
 
 DISCORD_BOT_TOKEN = config('DISCORD_BOT_TOKEN')
-
-handler = logging.FileHandler(filename='gizmo.log', encoding='utf-8', mode='a')
+log_path = pathlib.Path.cwd().joinpath('gizmo.log')
+handler = logging.FileHandler(filename=str(log_path), encoding='utf-8', mode='a')
 log = logging.getLogger('gizmo')
 
 MY_GUILD = discord.Object(id=935741302769844244)

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import logging
+import pathlib
 import random
 import asyncpg
 from aiohttp import ClientSession
@@ -10,7 +11,8 @@ from asyncpg.exceptions import UniqueViolationError
 
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
-handler = logging.FileHandler('../../magiceden_name_symbol.log', 'a', 'utf-8')
+log_path = pathlib.Path.cwd().joinpath('../../magiceden_name_symbol.log')
+handler = logging.FileHandler(str(log_path), 'a', 'utf-8')
 root_logger.addHandler(handler)
 
 
