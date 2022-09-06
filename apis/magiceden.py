@@ -71,8 +71,8 @@ class Magiceden:
                                      "discord server": discord_url,
                                      "stats": {"floor price": f"{floor_price / self.lamport} {self.symbol}",
                                                "listed count": listed_count,
-                                               "total volume": f"{(total_volume / self.lamport):.2f}{self.symbol}",
-                                               "avg price 24hr": f"{(avgPrice24hr / self.lamport):.2f}{self.symbol}", }
+                                               "total volume": f"{(total_volume / self.lamport):,.2f}{self.symbol}",
+                                               "avg price 24hr": f"{(avgPrice24hr / self.lamport):,.2f}{self.symbol}", }
                                      }
         await session.close()
 

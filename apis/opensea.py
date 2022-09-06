@@ -66,10 +66,10 @@ class Opensea:
                                      "collection website": collection_website,
                                      "twitter link": twitter_url,
                                      "discord server": discord_url,
-                                     "stats": {"total supply": total_supply,
+                                     "stats": {"total supply": f"{total_supply:,}",
                                                "floor price": f"{floor_price} {self.eth_symbol}",
-                                               "total volume": f"{total_volume:.2f} {self.eth_symbol}",
-                                               "avg price 24hr": f"{avgPrice24hr:.2f} {self.eth_symbol}",
+                                               "total volume": f"{total_volume:,.2f} {self.eth_symbol}",
+                                               "avg price 24hr": f"{avgPrice24hr:,.2f} {self.eth_symbol}",
                                                "unique holders": unique_holders}
                                      }
         await session.close()

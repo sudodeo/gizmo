@@ -64,10 +64,10 @@ class Coralcube:
                                      "collection website": collection_website,
                                      "twitter link": twitter_url,
                                      "discord server": discord_url,
-                                     "stats": {"total supply": total_supply,
+                                     "stats": {"total supply": f"{total_supply:,}",
                                                "floor price": f"{floor_price / self.lamport} {self.symbol}",
                                                "listed count": listed_count,
-                                               "seven day volume": f"{(seven_day_volume / self.lamport):.2f} {self.symbol}",
+                                               "seven day volume": f"{(seven_day_volume / self.lamport):,.2f} {self.symbol}",
                                                #    "avg price 24hr": f"{avgPrice24hr:.2f} {self.symbol}",
                                                "unique holders": unique_holders}
                                      }
