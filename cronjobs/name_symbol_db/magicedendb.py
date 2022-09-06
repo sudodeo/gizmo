@@ -11,7 +11,7 @@ from asyncpg.exceptions import UniqueViolationError
 
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
-log_path = pathlib.Path.cwd().joinpath('../../magiceden_name_symbol.log')
+log_path = pathlib.Path.cwd().joinpath('magiceden_name_symbol.log')
 handler = logging.FileHandler(str(log_path), 'a', 'utf-8')
 root_logger.addHandler(handler)
 
