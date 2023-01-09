@@ -11,13 +11,13 @@ import asyncio
 import os
 import aiohttp
 
-
+directory_path = os.path.dirname(os.path.abspath(__file__))
 DISCORD_BOT_TOKEN = config('DISCORD_BOT_TOKEN')
-log_path = pathlib.Path.cwd().joinpath('gizmo.log')
+log_path = f"{directory_path}/gizmo.log"
 handler = logging.FileHandler(filename=str(log_path), encoding='utf-8', mode='a')
 log = logging.getLogger('gizmo')
 
-MY_GUILD = discord.Object(id=935741302769844244)
+MY_GUILD = discord.Object(id=int(config('GUILD_ID')))
 
 
 class Gizmo(commands.Bot):
