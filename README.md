@@ -17,3 +17,14 @@ DISCORD_BOT_TOKEN
 POSTGRES_URI
 
 GUILD_ID
+
+## TODO
+- Add Opensea sales monitor
+- Add Opensea listings monitor
+- Add Opensea bids Monitor
+- Add Gas fees calculator for mint transaction and gas alert for any gas value
+- wallet lookup information
+- current gas value
+- info for eth
+- info for sol
+- project analysis for magiceden and opensea
