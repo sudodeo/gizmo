@@ -18,16 +18,16 @@ class Test(commands.Cog):
     async def cleanup(self, ctx: commands.Context, amount: int) -> None:
         """ Purge messages """
         if ctx.author.resolved_permissions.manage_messages:
-            await ctx.channel.purge(limit=amount)
             await ctx.send(f'{amount} messages deleted', delete_after=5.0, ephemeral=True)
+            await ctx.channel.purge(limit=amount)
         else:
             await ctx.send('You do not have the required permissions to use this command', ephemeral=True, delete_after=5.0)
 
     @cleanup.error
     async def cleanup_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
         """ Purge error """
-        await self.bot.owner.send(f'Error in cleanup: {error}')
         await ctx.send(f'Error: {error}')
+        await self.bot.owner.send(f'Error in cleanup: {error}')
 
     # def is_in_guild(guild_id):
     #     async def predicate(ctx):
