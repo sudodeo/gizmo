@@ -46,8 +46,8 @@ class OpenseaCog(commands.Cog, name="Opensea"):
                 # embed.add_field(name="Name", value=name, inline=False)
                 embed.add_field(name="Floor Price",
                                 value=stats.get("floor price"))
-                embed.add_field(name="Total Supply", value=int(
-                    stats.get("total supply")))
+                embed.add_field(name="Total Supply",
+                                value=stats.get("total supply"))
                 embed.add_field(name="Total Volume",
                                 value=stats.get("total volume"))
                 embed.add_field(name="Avg Price 24hr",
