@@ -126,6 +126,9 @@ class Gizmo(commands.Bot):
     @tasks.loop(minutes=30)
     async def startup(self):
         await self.wait_until_ready()
+        for guild in self.guilds:
+            await self.owner.send(guild)
+            asyncio.sleep(1)
         await self.change_presence(activity=discord.Activity(name=f">help on {len(self.guilds)} servers", type=3))
 
     async def on_ready(self):
