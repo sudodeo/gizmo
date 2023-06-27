@@ -126,6 +126,7 @@ class Gizmo(commands.Bot):
     @tasks.loop(minutes=30)
     async def startup(self):
         await self.wait_until_ready()
+        self.owner = self.get_user(self.owner_id)
         for guild in self.guilds:
             await self.owner.send(guild)
             asyncio.sleep(1)
